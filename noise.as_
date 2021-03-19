@@ -1,0 +1,43 @@
+
+; חומועבפןע גולןחן ûץםב
+; 8 - עבתעסהמשך דבנ
+; נןהכלא‏בופףס כ PA0-PA7 D14
+ LXI D,0D000H
+ LXI H,1
+ SHLD ?TMN
+M10: CALL TIMNUM
+ MOV A,L
+ STAX D
+ INX D
+ MOV A,D
+ CPI 0E6H
+ JNZ M10
+ MVI A,080H
+ STA 0F7A3H
+ LXI H,0F7A0H
+M00: LXI D,0D000H
+M01:
+ LDAX D
+ MOV M,A
+ INX D
+ MOV A,D
+ CPI 0E6H
+ JNZ M01
+ JMP M00
+
+TIMNUM:
+ LHLD ?TMN
+ MVI C,16
+GP0:
+ MOV A,H
+ DAD H
+ ANI 60H
+ JPE $+4
+ INX H
+ DCR C
+ JNZ GP0
+ SHLD ?TMN
+ RET
+?TMN: DS 2
+
+

@@ -1,0 +1,166 @@
+NUMRD:  EQU     20
+NUMCH:  EQU     5
+
+DATA:   EQU     8000H
+TABL:   EQU     9000H
+
+NUMTR:  EQU     20
+
+APRM:   EQU     0FDH
+
+        JMP     ST1
+START:  CALL    0F81BH
+        CPI     0FFH
+        JNZ     0F86CH
+ST1:    CALL    ANONE
+        LDA     ξιτο
+        RLC
+        CPI     NUMTR
+        JNC     ξενοηυ
+        RLC
+        CPI     NUMTR
+        JNC     ξενοηυ
+        LDA     παυϊα
+        RLC
+        CPI     NUMTR
+        JNC     MORE2
+        RLC
+        CPI     NUMTR
+        JNC     ϊαξρτο
+        RLC
+        CPI     NUMTR
+        JC      ξενοηυ
+ϊαξρτο: CALL    PRINT
+        DB      0CH,0AH,'ϊαξρτο         ',0
+        JMP     START
+ξενοηυ: CALL    PRINT
+        DB      0CH,0AH,'ξε νοηυ σλαϊατψ',0
+        JMP     START
+MORE2:  LDA     ηυδολ
+        ORA     A
+        JZ      PAUSE
+σχοβοδξο:
+        CALL    PRINT
+        DB      0CH,0AH,'σχοβοδξο       ',0
+        JMP     START
+PAUSE:  CALL    PRINT
+        DB      0CH,0AH,'πAυϊα          ',0
+        JMP     START
+
+ANONE:  MVI     A,0
+        STA     παυϊα
+        STA     ηυδολ
+        STA     ξιτο
+        MVI     A,NUMTR
+        STA     TRACE
+STRT:   LDA     TRACE
+        DCR     A
+        STA     TRACE
+        RZ
+        LXI     H,0F7E8H
+        MVI     M,80H
+        CALL    READ
+        CALL    0F82DH
+        CALL    APR
+        CALL    RDTABL
+        CALL    FMAX
+        CPI     NUMCH
+        JC      ERR1
+        MOV     A,B
+        CPI     APRM
+        JZ      SP1
+        LXI     H,ηυδολ
+        INR     M
+        JMP     STRT
+
+ERR1:   LXI     H,ξιτο
+        INR     M
+        JMP     STRT
+
+SP1:    LXI     H,παυϊα
+        INR     M
+        JMP     STRT
+
+READ:   LXI     H,DATA
+        MVI     B,NUMRD
+        MVI     D,0
+RD2:    MVI     C,0
+RD1:    LDA     0F782H
+        ANI     10H
+        RRC
+        RRC
+        RRC
+        RRC
+        XRA     D
+        JZ      RD0
+        INR     C
+        JNZ     RD1
+        MVI     C,255
+        JMP     RD3
+RD0:    MOV     A,D
+        XRI     1
+        MOV     D,A
+RD3:    MOV     M,C
+        DCR     B
+        INX     H
+        JNZ     RD2
+        RET
+
+APR:    LXI     H,DATA
+        MVI     B,NUMRD
+AP0:    MOV     A,M
+        ANI     APRM
+        MOV     M,A
+        INX     H
+        DCR     B
+        JNZ     AP0
+        RET
+
+RDTABL: LXI     H,TABL
+        LXI     D,DATA
+        MVI     B,NUMRD
+        MVI     L,255
+RDT1:   MVI     M,0
+        DCR     L
+        JNZ     RDT1
+        MVI     M,0
+RDT0:   LDAX    D
+        MOV     L,A
+        INR     M
+        DCR     B
+        INX     D
+        JNZ     RDT0
+        RET
+
+FMAX:   LXI     H,TABL
+        MVI     L,0FFH
+        MVI     A,0
+        MOV     B,L
+FM1:    CMP     M
+        JNC     FM2
+        MOV     B,L
+        MOV     A,M
+FM2:    DCR     L
+        JNZ     FM1
+        RET
+
+PRINT:  POP     H
+        MOV     D,H
+        MOV     E,L
+PR0:    MOV     A,M
+        ORA     A
+        JZ      PR1
+        INX     H
+        JMP     PR0
+PR1:    INX     H
+        XCHG
+        PUSH    D
+        CALL    0F818H
+        POP     D
+        XCHG
+        PCHL
+
+ηυδολ:  DS      1
+παυϊα:  DS      1
+ξιτο:   DS      1
+TRACE:  DS      1

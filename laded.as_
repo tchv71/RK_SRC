@@ -1,0 +1,438 @@
+TGTBL:  EQU     08862H
+; עוהבכפןע לבגיעימפןק יחעש "לוףפמידב".
+START:
+START0: CALL    DRTABL
+        CALL    ANTABL
+        CALL    PRINT
+        CALL    MEN
+        CALL    DRSCR
+        CALL    REDSCR
+        CALL    WRSCR
+        JMP     START0
+
+DRTABL: CALL    CLEAR
+        LXI     H,206H
+        CALL    LOCATE
+        LXI     D,1801H
+        CALL    BLOCK
+        LXI     H,21FH
+        CALL    LOCATE
+        LXI     D,1801H
+        CALL    BLOCK
+        LXI     H,406H
+        CALL    LOCATE
+        LXI     D,1810H
+        CALL    BLOCK
+        LXI     H,41FH
+        CALL    LOCATE
+        LXI     D,1810H
+        CALL    BLOCK
+        LXI     H,116H
+        CALL    LOCATE
+        LXI     H,HEADLN
+        CALL    0F818H
+        LXI     H,0308H
+        CALL    LOCATE
+        LXI     H,STAGE
+        CALL    0F818H
+        LXI     H,0313H
+        CALL    LOCATE
+        LXI     H,MAZE
+        CALL    0F818H
+        LXI     H,0321H
+        CALL    LOCATE
+        LXI     H,STAGE
+        CALL    0F818H
+        LXI     H,032CH
+        CALL    LOCATE
+        LXI     H,MAZE
+        JMP     0F818H
+
+PRINT:  LXI     H,050BH
+        LXI     D,TABL2
+        MVI     C,16
+        MVI     B,1
+        CALL    PRINT0
+        LXI     H,0523H
+        MVI     C,11
+        JMP     PRINT0
+
+PRINT0:
+        PUSH    B
+        CALL    LOCATE
+        MOV     A,B
+        CALL    DECPR
+        PUSH    H
+        LXI     H,TAB
+        CALL    0F818H
+        POP     H
+        LDAX    D
+        CALL    DECPR
+        POP     B
+        INX     D
+        INR     H
+        INR     B
+        DCR     C
+        JNZ     PRINT0
+        RET
+
+DECPR:
+        PUSH    B
+        MVI     C,0
+        MOV     B,A
+DEC1:   MOV     A,B
+        ORA     A
+        JZ      DEC0
+        DCR     B
+        MOV     A,C
+        INR     A
+        DAA
+        MOV     C,A
+        JMP     DEC1
+DEC0:   MOV     A,C
+        CALL    0F815H
+        POP     B
+        RET
+
+
+ANTABL: LHLD    TGTBL
+        SHLD    TABL1
+        MVI     A,1
+        STA     TABL2
+        STA     TRAC
+        STA     MAXNUM
+AT3:    LXI     H,TGTBL
+        LDA     TRAC
+        ANI     7FH
+        RLC
+        CALL    GTADR
+        MOV     C,M
+        INX     H
+        MOV     B,M
+        CALL    SEARCH
+        JNZ     AT0
+        PUSH    H
+        LXI     H,TABL2
+        LDA     OLDNUM
+        CALL    GTADR
+        MOV     A,M
+        PUSH    PSW
+        LXI     H,TABL2
+        LDA     TRAC
+        CALL    GTADR
+        POP     PSW
+        MOV     M,A
+        POP     H
+        JMP     AT1
+AT0:    PUSH    H
+        LXI     H,TABL1
+        LDA     MAXNUM
+        ANI     7FH
+        RLC
+        CALL    GTADR
+        MOV     M,C
+        INX     H
+        MOV     M,B
+        LXI     H,TABL2
+        LDA     TRAC
+        CALL    GTADR
+        LDA     MAXNUM
+        INR     A
+        STA     MAXNUM
+        MOV     M,A
+        POP     H
+AT1:    LDA     TRAC
+        INR     A
+        STA     TRAC
+        CPI     27
+        JNZ     AT3
+        RET
+SEARCH: LDA     TRAC
+        MOV     D,A
+        MVI     A,0
+        STA     OLDNUM
+        LXI     H,TGTBL
+SR1:    MOV     A,C
+        CMP     M
+        INX     H
+        JNZ     SR0
+        MOV     A,B
+        CMP     M
+        RZ
+SR0:    INX     H
+        LDA     OLDNUM
+        INR     A
+        STA     OLDNUM
+        DCR     D
+        JNZ     SR1
+        MVI     A,2
+        DCR     A
+        RET
+
+GTADR:  PUSH    B
+        MVI     B,0
+        MOV     C,A
+        DAD     B
+        POP     B
+        RET
+
+
+MEN:    LXI     H,0517H
+        CALL    LOCATE
+        MVI     A,1
+        STA     CURLAB
+MEN0:   CALL    0F803H
+        MOV     C,A
+        CPI     19H
+        JNZ     MN0
+        LDA     CURLAB
+        DCR     A
+        JZ      MEN0
+        PUSH    PSW
+        CALL    0F809H
+        POP     PSW
+        STA     CURLAB
+        CPI     16
+        JNZ     MEN0
+        STA     CURLAB
+        LXI     H,1417H
+        CALL    LOCATE
+        JMP     MEN0
+MN0:    CPI     1AH
+        JNZ     MN1
+        LDA     CURLAB
+        INR     A
+        CPI     28
+        JZ      MEN0
+        STA     CURLAB
+        PUSH    PSW
+        CALL    0F809H
+        POP     PSW
+        CPI     17
+        JNZ     MEN0
+        LXI     H,052FH
+        CALL    LOCATE
+        MVI     A,17
+        STA     CURLAB
+        JMP     MEN0
+MN1:    CPI     20H
+        JNZ     MEN0
+        LDA     CURLAB
+        DCR     A
+        RLC
+        LXI     H,TGTBL
+        CALL    GTADR
+        MOV     E,M
+        INX     H
+        MOV     D,M
+        XCHG
+        LXI     D,8000H
+        DAD     D
+        SHLD    ADRLAB
+        RET
+
+DRSCR:  LHLD    ADRLAB
+        XCHG
+        LXI     H,0E7C0H
+DRS1:   LDAX    D
+        INX     H
+        INX     D
+        CPI     0FFH
+        JZ      SPACE
+        MOV     M,A
+        MOV     A,H
+        CPI     0EFH
+        JC      DRS1
+        MOV     A,L
+        CPI     0A0H
+        JC      DRS1
+        RET
+SPACE:  LDAX    D
+        MOV     B,A
+        INX     D
+SP0:    MVI     M,0
+        DCR     B
+        INX     H
+        JNZ     SP0
+        DCX     H
+        MOV     A,H
+        CPI     0EFH
+        JC      DRS1
+        MOV     A,L
+        CPI     0A0H
+        JC      DRS1
+        RET
+
+REDSCR: LXI     H,0
+RSC0:   CALL    0F803H
+        CPI     1BH
+        RZ
+        MOV     C,A
+        CALL    0F809H
+        JMP     RSC0
+
+WRSCR: 
+         LHLD    ADRLAB
+;       LXI     H,9C00H
+        XCHG
+        LXI     H,0E7C1H
+WRS1:   MOV     A,M
+        CPI     0
+        CZ      WRSP
+        STAX    D
+        INX     D
+        INX     H
+        MOV     A,H
+        CPI     0EFH
+        JC      WRS1
+        MOV     A,L
+        CPI     0A0H
+        JC      WRS1
+        RET
+WRSP:   MVI     C,1
+        INX     H
+        MOV     A,M
+        ORA     A
+        JNZ     WR2
+        MVI     A,0FFH
+        STAX    D
+        INX     D
+WR1:    MOV     A,M
+        ORA     A
+        JNZ     WR0
+        INR     C
+        MOV     A,C
+        ORA     A
+        JZ      WR3
+        INX     H
+        MOV     A,H
+        CPI     0EFH
+        JC      WR1
+        MOV     A,L
+        CPI     0A0H
+        JC      WR1
+WR0:    MOV     A,C
+;       DCR     A
+        DCX     H
+        RET
+WR2:    MVI     A,0
+        DCX     H
+        RET
+WR3:    MVI     A,0FFH
+        RET
+
+OUTSYM: EQU     0F809H
+
+MARK:   MOV     C,A
+        CALL    OUTSYM
+        MVI     C,8H
+        CALL    OUTSYM
+        RET
+
+STEP:   MOV     C,A
+        MVI     B,0
+        LXI     H,TBL
+        DAD     B
+        CALL    ST0
+        LXI     B,8
+        DAD     B
+        JMP     ST0
+ST0:    MOV     A,M
+        ORA     A
+        RZ
+        MOV     C,A
+        JMP     OUTSYM
+
+TBL:    DB      18H,18H,0,8,8,8,0,18H
+        DB      0,1AH,1AH,1AH,0,19H,19H,19H
+
+CLEAR:  MVI     C,1FH
+        JMP     OUTSYM
+
+LOCATE: PUSH    B
+        MVI     C,27
+        CALL    OUTSYM
+        MVI     C,'Y'
+        CALL    OUTSYM
+        MVI     A,31
+        ADD     H
+        MOV     C,A
+        CALL    OUTSYM
+        MVI     A,31
+        ADD     L
+        MOV     C,A
+        CALL    OUTSYM
+        POP     B
+        RET
+
+PUTSYMB: ; B - SYM C - DIRECTION
+        MOV     A,B
+        PUSH    B
+        CALL    MARK
+        POP     B
+        MOV     A,C
+        JMP     STEP
+        RET
+
+SEGMENT: ; B - SYM, C - DIRECTION, D - LENGTH
+        PUSH    B
+        CALL    PUTSYMB
+        POP     B
+        DCR     D
+        JNZ     SEGMENT
+        RET
+
+BLOCK:  ; D - הלימב, E - ûיעימב
+        MVI     B,'+'
+        MVI     C,0
+        CALL    PUTSYMB
+        MVI     B,'-'
+        MVI     C,0
+        PUSH    D
+        CALL    SEGMENT
+        POP     D
+        MVI     B,'+'
+        MVI     C,2
+        CALL    PUTSYMB
+        MVI     B,'!'
+        MVI     C,2
+        PUSH    D
+        MOV     D,E
+        CALL    SEGMENT
+        POP     D
+        MVI     B,'+'
+        MVI     C,4
+        CALL    PUTSYMB
+        MVI     B,'-'
+        MVI     C,4
+        PUSH    D
+        CALL    SEGMENT
+        POP     D
+        MVI     B,'+'
+        MVI     C,6
+        CALL    PUTSYMB
+        MVI     B,'!'
+        MVI     C,6
+        PUSH    D
+        MOV     D,E
+        CALL    SEGMENT
+        POP     D
+        RET
+
+HEADLN: DB      'עוהבכפןע לוףפמיד.',1BH,'Y',20H+24,20H+16
+        DB      '(C) SC80 םןףכקב זםû - 542',0
+STAGE:  DB      'üפבנ N:',0
+MAZE:   DB      'לוףפמידב N:',0
+TAB:    DB      '        ',0
+TRAC:   DS      1
+MAXNUM: DS      1
+OLDNUM: DS      1
+CURLAB: DS      1
+ADRLAB: DS      1
+TABL1:  DS      27+27
+TABL2:  DS      27
+        END
+
+
+
+

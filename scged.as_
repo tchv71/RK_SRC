@@ -1,0 +1,121 @@
+; SCREEN GRAPHIC  EDITOR   V1.03
+
+SCREEN: EQU     5000H
+DISPLY: EQU     0F7C0H
+PPI:    EQU     0F7E0H
+ETTTY: EQU     0F803H
+
+
+START:
+        LXI     H,DISPLY+1
+        MVI     M,0
+        DCX     H
+        MVI     M,4DH
+        MVI     M,26H
+        MVI     M,77H
+        MVI     M,13H
+        INX     H
+        MVI     M,27H
+        MOV     A,M
+@1:     MOV     A,M
+        ANI     20H
+        JZ      @1
+
+        LXI     H,PPI+8
+        MVI     M,80H
+        MVI     L,0E4H
+        MVI     M,0;LO(SCREEN)
+        MVI     M,50H;HI(SCREEN)
+        INR     L
+        MVI     M,0E1H
+        MVI     M,4BH
+        MVI     L,0E8H
+        MVI     M,0A4H
+        MVI     A,80H
+        STA     DISPLY+1
+        LDA     _CX
+        STA     DISPLY
+        LDA     _CY
+        STA     DISPLY
+
+
+TTYIN:
+        CALL    ETTTY
+        CPI     20H
+        JC      CTRL
+TTYOUT: LHLD    _CADDR
+        MOV     M,A
+        JMP     TTYIN
+
+CTRL:   CPI     1AH
+        JZ      DOWN
+        CPI     19H
+        JZ      UP
+        CPI     8
+        JZ      LEFT
+        CPI     18H
+        JZ      RIGHT
+        JMP     TTYOUT
+
+UP:     LHLD    _CADDR
+        LXI     B,0-78
+        DAD     B
+        SHLD    _CADDR
+        MVI     A,80H
+        STA     DISPLY+1
+        LDA     _CX
+        STA     DISPLY
+        LDA     _CY
+        DCR     A
+        STA     _CY
+        STA     DISPLY
+        JMP     TTYIN
+
+DOWN:   LHLD    _CADDR
+        LXI     B,78
+        DAD     B
+        SHLD    _CADDR
+        MVI     A,80H
+        STA     DISPLY+1
+        LDA     _CX
+        STA     DISPLY
+        LDA     _CY
+        INR     A
+        STA     _CY
+        STA     DISPLY
+        JMP     TTYIN
+
+LEFT:   LHLD    _CADDR
+        DCX     H
+        SHLD    _CADDR
+        MVI     A,80H
+        STA     DISPLY+1
+        LDA     _CX
+        DCR     A
+        STA     _CX
+        STA     DISPLY
+        LDA     _CY
+        STA     DISPLY
+        JMP     TTYIN
+
+RIGHT:  LHLD    _CADDR
+        INX     H
+        SHLD    _CADDR
+        MVI     A,80H
+        STA     DISPLY+1
+        LDA     _CX
+        INR     A
+        STA     _CX
+        STA     DISPLY
+        LDA     _CY
+        STA     DISPLY
+        JMP     TTYIN
+
+
+
+
+_CADDR: DW      SCREEN+328H
+_CX:    DB      28
+_CY:    DB      10
+        END
+

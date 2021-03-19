@@ -1,0 +1,72 @@
+; D - δεμινοε
+; E - δεμιτεμψ
+; H - ώαστξοε
+; C - οστατολ
+DIV88:  LXI     H,8
+        MVI     C,0
+NEXT:   MOV     A,E
+        RAL
+        MOV     E,A
+        MOV     A,C
+        RAL
+        SUB     D
+        JNC     NOADD
+        ADD     D
+NOADD:  MOV     C,A
+        CMC
+        MOV     A,H
+        RAL
+        MOV     H,A
+        DCR     L
+        JNZ     NEXT
+        RET
+
+; δεμεξιε 32-θ βιτξοηο δεμινοηο
+; ξα  16 - τι  βιτξωκ  δεμιτεμψ
+; (HL)-(DE) - δεμινοε
+; (BC) - δεμιτεμψ
+; (Dε) - ώαστξοε
+; (HL) - οστατολ
+DIV:    MOV     A,L
+        SUB     C
+        MOV     A,H
+        SBB     B
+        RNC
+        XRA     A
+LOOP:   DAD     H
+        PUSH    PSW
+        XCHG
+        DAD     H
+        XCHG
+        JNC     L1
+        INX     H
+L1:     MOV     A,L
+        SUB     C
+        MOV     L,A
+        MOV     A,H
+        SBB     B
+        MOV     H,A
+        JC      L2
+        POP     PSW
+L3:     INX     D
+        JMP     L4
+L2:     POP     PSW
+        JC      L3
+        DAD     B
+L4:     ADI     10H
+        JNC     LOOP
+        RET
+
+; (DE) , A - σονξοφιτεμι
+; A-(HL)  - πςοιϊχεδεξιε
+DMULT:  LXI     H,0
+        MVI     C,8
+NXBIT:  DAD     H
+        RAL
+        JNC     $+4
+        DAD     D
+        ACI     0
+        DCR     C
+        JNZ     NXBIT
+        RET
+

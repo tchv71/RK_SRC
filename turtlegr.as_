@@ -1,0 +1,160 @@
+OUTSYM: EQU     0F809H
+        CALL    CLEAR
+        LXI     H,1305H
+        CALL    LOCATE
+        MVI     D,10
+        CALL    FILLING
+        JMP     0F86CH
+
+MARK:   MOV     C,A
+        CALL    OUTSYM
+        MVI     C,8H
+        CALL    OUTSYM
+        RET
+
+STEP:   MOV     C,A
+        MVI     B,0
+        LXI     H,TBL
+        DAD     B
+        CALL    ST0
+        LXI     B,8
+        DAD     B
+        JMP     ST0
+ST0:    MOV     A,M
+        ORA     A
+        RZ
+        MOV     C,A
+        JMP     OUTSYM
+
+TBL:    DB      18H,18H,0,8,8,8,0,18H
+        DB      0,1AH,1AH,1AH,0,19H,19H,19H
+
+CLEAR:  MVI     C,1FH
+        JMP     OUTSYM
+
+LOCATE: MVI     C,27
+        CALL    OUTSYM
+        MVI     C,'Y'
+        CALL    OUTSYM
+        MVI     A,31
+        ADD     H
+        MOV     C,A
+        CALL    OUTSYM
+        MVI     A,31
+        ADD     L
+        MOV     C,A
+        JMP     OUTSYM
+
+PUTSYMB: ; B - SYM C - DIRECTION
+        MOV     A,B
+        PUSH    B
+        CALL    MARK
+        POP     B
+        MOV     A,C
+        JMP     STEP
+        RET
+
+SEGMENT: ; B - SYM, C - DIRECTION, D - LENGTH
+        PUSH    B
+        CALL    PUTSYMB
+        POP     B
+        DCR     D
+        JNZ     SEGMENT
+        RET
+
+BLOCK:  ; D - δμιξα, E - ϋιςιξα
+        MVI     B,'+'
+        MVI     C,0
+        CALL    PUTSYMB
+        MVI     B,'-'
+        MVI     C,0
+        PUSH    D
+        CALL    SEGMENT
+        POP     D
+        MVI     B,'+'
+        MVI     C,2
+        CALL    PUTSYMB
+        MVI     B,'!'
+        MVI     C,2
+        PUSH    D
+        MOV     D,E
+        CALL    SEGMENT
+        POP     D
+        MVI     B,'+'
+        MVI     C,4
+        CALL    PUTSYMB
+        MVI     B,'-'
+        MVI     C,4
+        PUSH    D
+        CALL    SEGMENT
+        POP     D
+        MVI     B,'+'
+        MVI     C,6
+        CALL    PUTSYMB
+        MVI     B,'!'
+        MVI     C,6
+        PUSH    D
+        MOV     D,E
+        CALL    SEGMENT
+        POP     D
+        RET
+
+BALL:   ; B - SYM
+        MVI     D,8
+        MVI     C,0
+BL1:    MOV     A,C
+        CPI     2
+        JZ      BL0
+        CPI     6
+        JZ      BL0
+        PUSH    B
+        CALL    PUTSYMB
+        POP     B
+BL0:    INR     C
+        DCR     D
+        JNZ     BL1
+        RET
+
+FILLING: ; D - χωσοτα στομβα
+        MVI     B,'!'
+        MVI     C,6
+        PUSH    D
+        CALL    SEGMENT
+        POP     D
+        MVI     A,0
+        CALL    STEP
+        MVI     A,1
+        CALL    STEP
+        MVI     B,'!'
+        MVI     C,2
+        PUSH    D
+        CALL    SEGMENT
+        POP     D
+        MVI     A,5
+        CALL    STEP
+FIL0:   PUSH    D
+        MVI     A,5FH
+        CALL    MARK1
+        MVI     A,2DH
+        CALL    MARK1
+        MVI     A,1CH
+        CALL    MARK1
+        MVI     A,14H
+        CALL    MARK1
+        MVI     A,17H
+        CALL    MARK1
+        MVI     A,6
+        CALL    STEP
+        POP     D
+        DCR     D
+        JNZ     FIL0
+        RET
+
+MARK1:  CALL    MARK
+        LXI     B,1000H
+MR1:    DCX     B
+        MOV     A,B
+        ORA     A
+        JNZ     MR1
+        RET
+

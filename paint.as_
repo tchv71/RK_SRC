@@ -1,0 +1,69 @@
+        ORG     1600H
+KOD:    EQU     1FH
+        MVI     M,'ы'
+        NOP;CALL    0F803H
+        CALL    PAINT1
+        RET
+PAINT1: PUSH    H
+        PUSH    D
+        PUSH    B
+        MVI     M,KOD
+        MOV     D,H;DE-мечбс зтбойгб
+        MOV     E,L;BC-ртбчбс зтбойгб
+P0:     DCX     H
+        CALL    ?ъблт
+        JZ      P1
+        MVI     M,KOD
+        JMP     P0
+P1:     XCHG
+P2:     INX     H
+        CALL    ?ъблт
+        JZ      P3
+        MVI     M,KOD
+        JMP     P2
+P3:     DCX     H
+        MOV     B,H
+        MOV     C,L
+        PUSH    B
+        LXI     B,0-78
+        DAD     B
+        XCHG
+        DAD     B
+        XCHG
+        POP     B
+        CALL    ртпун
+        PUSH    B
+        MOV     H,B
+        MOV     L,C
+        LXI     B,78
+        DAD     B
+        LXI     B,78+78
+        XCHG
+        DAD     B
+        XCHG
+        POP     B
+        CALL    ртпун
+        POP     B
+        POP     D
+        POP     H
+        RET
+ртпун:  CALL    ?ъблт
+        JZ      P4
+        CALL    PAINT1
+P4:     DCX     H
+        MOV     A,D
+        XRA     H
+        JNZ     ртпун
+        MOV     A,E
+        XRA     L
+        JNZ     ртпун
+        RET
+?ъблт:  MOV     A,M
+        CPI     'ы'
+        JZ      P5
+        CPI     KOD
+P5:     RET
+K:      DB      1FH
+лпоег: DB       1
+        END
+

@@ -370,7 +370,7 @@ INITPL:
  RET
 
 
-SOUND:; B - ξονες ξοτω, C - ξOνες ολταχω,A - ξονες λαξαμα
+SOUND:; B - ΠΠΠΠ•Π  ΠΠΠΆΠ«, C - ΠOΠΠ•Π  ΠΠΠΆΠΠ’Π«,A - ΠΠΠΠ•Π  ΠΠΠΠΠ›Π
  PUSH H
  PUSH D
  PUSH PSW
@@ -529,11 +529,11 @@ GETDEL:
  MOV H,A
  RET
 
-;υσλοςεξξωε πςεοβςαϊοχαξιρ BIN ι BCD - ώισεμ
-; DNUM - αδςεσ BCD - ώισμα
-; NDEC - δμιξα -""-
-; BNUM - δμιξα BIN - ώισμα
-; NBIN - δμιξα -""-
+;Π£Π΅ΠΠΠ Π•ΠΠΠ«Π• ΠΠ Π•ΠΠ‘Π ΠΠ—ΠΠ’ΠΠΠΠ― BIN Π BCD - Π§ΠΠ΅Π•Π›
+; DNUM - ΠΠ”Π Π•Π΅ BCD - Π§ΠΠ΅Π›Π
+; NDEC - Π”Π›ΠΠΠ -""-
+; BNUM - Π”Π›ΠΠΠ BIN - Π§ΠΠ΅Π›Π
+; NBIN - Π”Π›ΠΠΠ -""-
 
 ?ZERON:XRA A
 LOOP1:MOV M,A
@@ -617,24 +617,24 @@ SHIFTR:
  MOV L,A
  JMP ?71
 
-; λοόζζιγιεξτω δεμεξιρ δμρ ξοτ λοξτςολταχω
-; 16.5νηγ;16 νηγ
+; ΠΠΠ­Π¤Π¤ΠΠ¦ΠΠ•ΠΠΆΠ« Π”Π•Π›Π•ΠΠΠ― Π”Π›Π― ΠΠΠΆ ΠΠΠΠΆΠ ΠΠΠΆΠΠ’Π«
+; 16.5ΠΠ“Π¦;16 ΠΠ“Π¦
 PLTBL:
- DW 0DB34H;0D459H - δο
- DW 0CEE7H;0C86EH - δο#
- DW 0C34AH;0BD2EH - ςε
- DW 0B854H;0B290H - ςε#
- DW 0ADFCH;0A88AH - νι
- DW 0A438H;09F15H - ζα
- DW 09B00H;09627H - ζα#
- DW 0924DH;08DBAH - σομψ
- DW 08A17H;085C5H - σομψ#
- DW 08257H;07E43H - μρ
- DW 07B00H;0772DH - μρ#
- DW 0741FH;0707DH - σι
+ DW 0DB34H;0D459H - Π”Π
+ DW 0CEE7H;0C86EH - Π”Π#
+ DW 0C34AH;0BD2EH - Π Π•
+ DW 0B854H;0B290H - Π Π•#
+ DW 0ADFCH;0A88AH - ΠΠ
+ DW 0A438H;09F15H - Π¤Π
+ DW 09B00H;09627H - Π¤Π#
+ DW 0924DH;08DBAH - Π΅ΠΠ›Π¬
+ DW 08A17H;085C5H - Π΅ΠΠ›Π¬#
+ DW 08257H;07E43H - Π›Π―
+ DW 07B00H;0772DH - Π›Π―#
+ DW 0741FH;0707DH - Π΅Π
 
-; νεξυότ ι.σ.βαθ
-; 1 ηομοσ
+; ΠΠ•ΠΠ£Π­ΠΆ Π.Π΅.Π‘ΠΠ¥
+; 1 Π“ΠΠ›ΠΠ΅
 PL01:
  DB 'V13T110L4O4^E2ED8E8E1E4"FFFF^EDEC2CO3B8O4C8C1C4'
  DB '"CCCCC^O3BO4CO3A2AG8A8A1A4'
@@ -664,13 +664,13 @@ PL02:
 
 PL03: DB 'T1L1RRR',0
 
-; χο πομε βεςεϊα στορμα (EMPTY)
-; 1 ηομοσ
+; Π’Π ΠΠΠ›Π• Π‘Π•Π Π•Π—Π Π΅ΠΆΠΠ―Π›Π (EMPTY)
+; 1 Π“ΠΠ›ΠΠ΅
 PL11:
  DB 'T110L4^O4AEDE8O3A8AO4GAG8A8'
  DB 'AEDE8O3A8AO4GAG8A8AA1',0
  DB  0
-; 2 ηομοσ
+; 2 Π“ΠΠ›ΠΠ΅
 PL12:
  DB 'T110L8^O0AO1AO0AO1AO0AO1AO0AO1A'
  DB 'O0AO1AO0AO1AO0AO1AO0AO1A'
@@ -683,20 +683,20 @@ PL13: DB 'T1L1RRR1',0
 
 
 
-; πεσεξλα λςολοδιμα ηεξω (PLAY START)
-; 1 ηομοσ
+; ΠΠ•Π΅Π•ΠΠΠ ΠΠ ΠΠΠΠ”ΠΠ›Π Π“Π•ΠΠ« (PLAY START)
+; 1 Π“ΠΠ›ΠΠ΅
 PL21:
  DB 'T180L8"O4CRCRRRCR','DRDRRRDR','ERERRRCR'
  DB 'EREDRDDR','^CCC8'
  DB 0
-; 2 ηομοσ
+; 2 Π“ΠΠ›ΠΠ΅
 PL22:
  DB 'T180L8"O3GRGGRGGR','GRGGRGGR','GRGGRGGR'
  DB 'GRGGRGGR','^GGG8',0
 PL23:
  DB 'T1L1RRRR',0
 PL31:
-; λυϊξεώιλ (START)
+; ΠΠ£Π—ΠΠ•Π§ΠΠ (START)
  DB 'T160L8O3^E1DEFDE1O4DEFDE1',0
  DB 0
 PL32:
@@ -706,7 +706,7 @@ PL32:
 PL33:
  DB 'T1L1RRR',0
 
-; πτιγα ύασψρ (ποετ ι.Kοβϊοξ)    (CHECK POINT)
+; ΠΠΆΠΠ¦Π Π©ΠΠ΅Π¬Π― (ΠΠΠ•ΠΆ Π.KΠΠ‘Π—ΠΠ)    (CHECK POINT)
 PL41: DB 'T160L8O4"E8R8R4R2FRCDRRC4',0
 
 PL42: DB 'T160L8O3"G8R8R4R2GRGGRRG4',0
@@ -770,12 +770,12 @@ DLC2:DS 2
 DLC3:DS 2
 LEGATO:DS 1
 STCPNT:DS 2
-ZAST: DB 1FH,' 1  νιξυότ ι.σ.βαθ'
-      DB 0DH,0AH,' 2  χο πομε βεςεϊα στορμα..'
-      DB 0AH,0DH,' 3 pεσεξλα λςολοδιμα ηεξω'
-      DB 0DH,0AH,' 4 λυϊξεώιλ'
-      DB 0DH,0AH,' 5 πτιγα ύασψρ (ποετ ι.λοβϊοξ)'
-      DB 0DH,0AH,' 6 χ μεσυ ςοδιμασψ εμοώλα ...',0
+ZAST: DB 1FH,' 1  ΠΠΠΠ£Π­ΠΆ Π.Π΅.Π‘ΠΠ¥'
+      DB 0DH,0AH,' 2  Π’Π ΠΠΠ›Π• Π‘Π•Π Π•Π—Π Π΅ΠΆΠΠ―Π›Π..'
+      DB 0AH,0DH,' 3 pΠ•Π΅Π•ΠΠΠ ΠΠ ΠΠΠΠ”ΠΠ›Π Π“Π•ΠΠ«'
+      DB 0DH,0AH,' 4 ΠΠ£Π—ΠΠ•Π§ΠΠ'
+      DB 0DH,0AH,' 5 ΠΠΆΠΠ¦Π Π©ΠΠ΅Π¬Π― (ΠΠΠ•ΠΆ Π.ΠΠΠ‘Π—ΠΠ)'
+      DB 0DH,0AH,' 6 Π’ Π›Π•Π΅Π£ Π ΠΠ”ΠΠ›ΠΠ΅Π¬ Π•Π›ΠΠ§ΠΠ ...',0
 
  END
 

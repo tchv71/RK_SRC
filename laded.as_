@@ -1,5 +1,5 @@
 TGTBL:  EQU     08862H
-; ςεδαλτος μαβιςιξτοχ ιηςω "μεστξιγα".
+; Π Π•Π”ΠΠΠΆΠΠ  Π›ΠΠ‘ΠΠ ΠΠΠΆΠΠ’ ΠΠ“Π Π« "Π›Π•Π΅ΠΆΠΠΠ¦Π".
 START:
 START0: CALL    DRTABL
         CALL    ANTABL
@@ -382,7 +382,7 @@ SEGMENT: ; B - SYM, C - DIRECTION, D - LENGTH
         JNZ     SEGMENT
         RET
 
-BLOCK:  ; D - δμιξα, E - ϋιςιξα
+BLOCK:  ; D - Π”Π›ΠΠΠ, E - Π¨ΠΠ ΠΠΠ
         MVI     B,'+'
         MVI     C,0
         CALL    PUTSYMB
@@ -419,10 +419,10 @@ BLOCK:  ; D - δμιξα, E - ϋιςιξα
         POP     D
         RET
 
-HEADLN: DB      'ςεδαλτος μεστξιγ.',1BH,'Y',20H+24,20H+16
-        DB      '(C) SC80 νοσλχα ζνϋ - 542',0
-STAGE:  DB      'όταπ N:',0
-MAZE:   DB      'μεστξιγα N:',0
+HEADLN: DB      'Π Π•Π”ΠΠΠΆΠΠ  Π›Π•Π΅ΠΆΠΠΠ¦.',1BH,'Y',20H+24,20H+16
+        DB      '(C) SC80 ΠΠΠ΅ΠΠ’Π Π¤ΠΠ¨ - 542',0
+STAGE:  DB      'Π­ΠΆΠΠ N:',0
+MAZE:   DB      'Π›Π•Π΅ΠΆΠΠΠ¦Π N:',0
 TAB:    DB      '        ',0
 TRAC:   DS      1
 MAXNUM: DS      1
